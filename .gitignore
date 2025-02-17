@@ -2,3 +2,4 @@
 influxdb-data/
 grafana-data/
 config/telegraf.conf
+.env.old.server

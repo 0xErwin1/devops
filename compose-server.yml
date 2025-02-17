@@ -12,20 +12,6 @@ services:
       - monitoring
     volumes:
       - ./influxdb-data:/var/lib/influxdb2
-  grafana:
-    image: grafana/grafana-oss:latest
-    container_name: grafana
-    restart: always
-    depends_on:
-      - influxdb
-    ports:
-      - 3000:3000
-    env_file:
-      - .env
-    networks:
-      - monitoring
-    volumes:
-      - ./grafana-data:/var/lib/grafana
   telegraf:
     image: telegraf:latest
     container_name: telegraf
@@ -42,6 +28,33 @@ services:
       - /:/hostfs:ro
       - ./config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - /var/run/docker.sock:/var/run/docker.sock
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: always
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./config/loki-config.yaml:/etc/loki/local-config.yaml
+      - ./loki-data:/tmp/loki
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: always
+    depends_on:
+      - influxdb
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    networks:
+      - monitoring
+    volumes:
+      - ./grafana-data:/var/lib/grafana
 
 networks:
   monitoring:

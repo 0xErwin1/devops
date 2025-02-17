@@ -41,7 +41,7 @@
   pattern = ".*"
 
 [[outputs.influxdb]]
-  urls = ["http://influxdb:8086"]
+  urls = ["{influx_url}"]
   token = "{influx_token}"
   organization = "{influx_org}"
   bucket = "{influx_bucket}"
