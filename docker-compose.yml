@@ -1,0 +1,48 @@
+services:
+  influxdb:
+    image: influxdb:2.7.7
+    container_name: influxdb
+    restart: always
+    ports:
+      - 8086:8086
+      - 8089:8089/udp
+    env_file:
+      - .env
+    networks:
+      - monitoring
+    volumes:
+      - ./influxdb-data:/var/lib/influxdb2
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: always
+    depends_on:
+      - influxdb
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    networks:
+      - monitoring
+    volumes:
+      - ./grafana-data:/var/lib/grafana
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    restart: always
+    hostname: "ubuntu"
+    user: 1001:988
+    depends_on:
+      - influxdb
+    env_file:
+      - .env.telegraf
+    networks:
+      - monitoring
+    volumes:
+      - /:/hostfs:ro
+      - ./config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  monitoring:
+    driver: bridge
