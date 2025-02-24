@@ -1,8 +1,5 @@
 #!/usr/bin/env perl
 
-# El objetivo de este script es inicializar los servicios para utilizar con influxdb
-# La idea es pasara un script simple de bash a perl, simplemente para ver que tan facil es usar perl en vez de bash
-
 use strict;
 use warnings;
 use File::Copy;
